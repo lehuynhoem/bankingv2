@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Chuyển Khoản</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: system-ui, sans-serif;
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e5e7eb;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            position: relative;
+            max-width: 380px;
+            width: 100%;
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .55);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: relative;
+            padding-right: 86px;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            margin: 0;
+            text-align: left;
+            font-size: 20px;
+        }
+
+        .payment-avatar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 64px;
+            height: 64px;
+            z-index: 5;
+        }
+
+        .payment-avatar .avatar-img {
+            position: absolute;
+            bottom: +7px;
+            /* 👈 avatar thò xuống dưới */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 1;
+            /* 👈 nằm dưới khung */
+            background: #020617;
+        }
+
+
+
+        .payment-avatar .avatar-frame {
+            position: absolute;
+            inset: 0;
+            width: 64px;
+            height: 64px;
+            z-index: 2;
+            /* 👈 đè lên avatar */
+            pointer-events: none;
+            user-select: none;
+
+            /* glow nhẹ */
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, .35));
+            animation: frameGlow 2.5s ease-in-out infinite;
+        }
+
+
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg)
+            }
+
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .payment-avatar .online-dot {
+            position: absolute;
+            bottom: -2px;
+            /* 👈 NẰM DƯỚI */
+            right: +6px;
+            /* 👈 SÁT MÉP KHUNG */
+            width: 10px;
+            height: 10px;
+            background: #3ba55d;
+            border-radius: 50%;
+            border: 2px solid #020617;
+            box-shadow: 0 0 6px rgba(59, 165, 93, .9);
+            z-index: 3;
+        }
+
+
+
+
+        /* ===== OFFLINE ===== */
+        .payment-avatar.offline .online-dot {
+            background: url("offline.svg") center / cover no-repeat;
+            border: none;
+            box-shadow: none;
+        }
+
+        /* ===== INFO ===== */
+        .info {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 6px 0;
+        }
+
+        .row-text {
+            flex: 1;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        /* ===== BUTTON ===== */
+        .copy-btn {
+            padding: 10px 14px;
+            background: #020617;
+            color: #e5e7eb;
+            border-radius: 14px;
+            border: 1px solid #1e293b;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .15s;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 18px rgba(255, 255, 255, .35);
+        }
+
+        .copy-mini {
+            padding: 8px 12px;
+            font-size: 13px
+        }
+
+        .copy-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
+        /* ===== QR ===== */
+        .qr {
+            background: #fff;
+            padding: 14px;
+            border-radius: 14px;
+            margin: 16px 0 8px;
+        }
+
+        .qr img {
+            width: 100%
+        }
+
+        /* ===== TIMER ===== */
+        .timer {
+            margin-top: 14px;
+            height: 4px;
+            background: #1e293b;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: #fff;
+            transition: 1s linear;
+        }
+
+        .timer-wrap {
+            margin-top: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .timer-text span {
+            position: relative;
+            padding: 0 1px;
+        }
+
+        .timer-text span::after {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            animation: ledRun 2.5s linear infinite;
+            animation-delay: calc(var(--i)*.15s);
+        }
+
+
+        /* ===== GLOW ANIMATION (NO ROTATE) ===== */
+        @keyframes frameGlow {
+            0% {
+                filter: drop-shadow(0 0 4px rgba(255, 255, 255, .25));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, .55));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 4px rgba(255, 255, 255, .25));
+            }
+        }
+
+        .timer-time {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            min-width: 60px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #020617;
+            border: 1px solid #fff;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            opacity: 0;
+            transition: .3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🔰 QR Chuyển Khoản</h1>
+
+            <div class="payment-avatar">
+                <img src="avatar.webp" class="avatar-img">
+                <img src="lumine_avatar_frame.webp" class="avatar-frame">
+                <span class="online-dot"></span>
+            </div>
+        </div>
+
+        <!-- INFO -->
+        <div class="info">
+            <b>🏧 Ngân hàng:</b> Vietinbank<br>
+            <b>👤 Chủ Tài Khoản:</b> LE DUC HUY<br>
+
+            <div class="row">
+                <div class="row-text">💳 Số tài khoản: 104883544991</div>
+                <button class="copy-btn copy-mini action-btn" onclick="copyText(ACCOUNT)">Sao chép</button>
+            </div>
+
+            <div class="row">
+                <div class="row-text"><b>Nội dung:</b> <span id="contentText"></span></div>
+                <button class="copy-btn copy-mini action-btn" onclick="copyText(content)">Sao chép</button>
+            </div>
+
+            <b>⚠️ Lưu ý:</b> Chỉ thanh toán qua tài khoản này
+        </div>
+
+        <div class="qr">
+            <img id="qrImg">
+        </div>
+
+        <button class="copy-btn action-btn" onclick="downloadQR()">⬇️ Tải QR</button>
+
+        <div class="timer">
+            <div class="timer-bar" id="timerBar"></div>
+        </div>
+
+        <div class="timer-wrap">
+            <div class="timer-text" id="timerLabel"></div>
+            <div class="timer-time" id="timerTime"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Đã sao chép ✔</div>
+
+    <script>
+        const BANK_ID = "970415";
+        const ACCOUNT = "104883544991";
+        const NAME = "LE DUC HUY";
+        const EXPIRE_TIME = 15 * 60 * 1000;
+
+        function randomCode() {
+            return "LEHUY-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+        }
+
+        const content = randomCode();
+        contentText.innerText = content;
+        qrImg.src = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT}-compact.png?addInfo=${content}&accountName=${NAME}`;
+
+        const label = "MÃ HẾT HẠN SAU:";
+        timerLabel.innerHTML = [...label].map((c, i) => `<span style="--i:${i}">${c === " " ? "&nbsp;" : c}</span>`).join("");
+
+        const toast = document.getElementById("toast");
+        function copyText(t) {
+            navigator.clipboard.writeText(t);
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 1200);
+        }
+
+        function downloadQR() {
+            fetch(qrImg.src).then(r => r.blob()).then(b => {
+                const u = URL.createObjectURL(b);
+                const a = document.createElement("a");
+                a.href = u; a.download = `QR_${content}.png`; a.click();
+                URL.revokeObjectURL(u);
+            });
+        }
+
+        const start = Date.now();
+        setInterval(() => {
+            const r = EXPIRE_TIME - (Date.now() - start);
+            if (r <= 0) { timerTime.innerText = "HẾT HẠN"; timerBar.style.width = "0%"; return }
+            timerBar.style.width = (r / EXPIRE_TIME * 100) + "%";
+            const m = Math.floor(r / 60000);
+            const s = Math.floor(r % 60000 / 1000);
+            timerTime.innerText = `${m}:${s.toString().padStart(2, "0")}`;
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

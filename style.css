@@ -1,0 +1,57 @@
+.qr-header {
+    position: relative;
+    /* 🔥 then chốt */
+    background: linear-gradient(180deg, #050b1a, #030817);
+    padding: 24px;
+    border-radius: 18px;
+    color: #fff;
+    overflow: hidden;
+}
+
+/* Text bên trái */
+.qr-title h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.qr-title p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Avatar box */
+.avatar-box {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    box-shadow: 0 0 16px rgba(79, 172, 254, 0.7);
+}
+
+/* Avatar image */
+.avatar-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Status ON */
+.status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: #00ff88;
+    border-radius: 50%;
+    border: 2px solid #020817;
+    box-shadow: 0 0 8px #00ff88;
+}
