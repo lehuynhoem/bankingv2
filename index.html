@@ -485,6 +485,38 @@
         });
 
 
+        /* ===== DETECT DEVTOOLS ===== */
+        (function () {
+            let opened = false;
+
+            const threshold = 160;
+
+            setInterval(() => {
+                const widthDiff = window.outerWidth - window.innerWidth > threshold;
+                const heightDiff = window.outerHeight - window.innerHeight > threshold;
+
+                if (widthDiff || heightDiff) {
+                    if (!opened) {
+                        opened = true;
+
+                        // 🔒 khóa cứng
+                        document.body.innerHTML = `
+                    <div style="
+                        height:100vh;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        background:#000;
+                        color:#fff;
+                        font-size:22px;
+                        font-weight:700;">
+                        ⚠️ Truy cập bị chặn
+                    </div>
+                `;
+                    }
+                }
+            }, 500);
+        })();
     </script>
 
 
