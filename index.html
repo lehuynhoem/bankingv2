@@ -2,10 +2,63 @@
 <html lang="vi">
 <link rel="preload" as="image" href="avatar.webp">
 <link rel="preload" as="image" href="01.gif">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lehuy nho em</title>
+    <script>
+        (function () {
+            const isPhone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isDesktopViewport = window.innerWidth > 768;
+
+            // 📱 Điện thoại nhưng ép trang web máy tính
+            if (isPhone && isDesktopViewport) {
+                document.documentElement.innerHTML = `
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Bị chặn</title>
+            <style>
+                body {
+                    margin: 0;
+                    height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #000;
+                    color: #fff;
+                    font-family: system-ui, sans-serif;
+                    text-align: center;
+                }
+                .box {
+                    max-width: 320px;
+                }
+                .box h1 {
+                    font-size: 22px;
+                    margin-bottom: 12px;
+                }
+                .box p {
+                    opacity: .8;
+                    font-size: 14px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="box">
+                <h1>⚠️ Không hỗ trợ chế độ máy tính</h1>
+                <p>Vui lòng tắt “Trang web cho máy tính”<br>và tải lại trang.</p>
+            </div>
+        </body>`;
+            }
+        })();
+    </script>
+    window.addEventListener("resize", () => {
+    const isPhone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isPhone && window.innerWidth > 768) {
+    location.reload(); // ép reload để dính block
+    }
+    });
 
     <style>
         html,
@@ -302,11 +355,11 @@
         </div>
 
         <div class="info">
-            <b>🏧 Ngân hàng:</b> 𝙑𝙞𝙚𝙩𝙞𝙣𝙗𝙖𝙣𝙠<br>
-            <b>👤 Chủ Tài Khoản:</b> 𝙇𝙀 𝘿𝙐𝘾 𝙃𝙐𝙔<br>
+            <b>🏧 Ngân hàng:</b> Vietinbank<br>
+            <b>👤 Chủ Tài Khoản:</b> LE DUC HUY<br>
 
             <div class="row">
-                <div class="row-text">💳 STK: 𝟭𝟬𝟰𝟴𝟴𝟯𝟱𝟰𝟰𝟵𝟵𝟭</div>
+                <div class="row-text">💳 104883544991</div>
                 <button class="copy-btn copy-mini" onclick="copyText(ACCOUNT)">Sao chép</button>
             </div>
 
@@ -399,49 +452,49 @@
 
         let running = true;
 
-function drawLightning() {
-    if (!running) return;
+        function drawLightning() {
+            if (!running) return;
 
-    ctx.clearRect(0, 0, size, size);
+            ctx.clearRect(0, 0, size, size);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
-    ctx.clip();
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+            ctx.clip();
 
-    const bolts = Math.floor(Math.random() * MAX_BOLTS) + 1;
+            const bolts = Math.floor(Math.random() * MAX_BOLTS) + 1;
 
-    for (let b = 0; b < bolts; b++) {
-        let x = Math.random() * size;
-        let y = Math.random() * size;
+            for (let b = 0; b < bolts; b++) {
+                let x = Math.random() * size;
+                let y = Math.random() * size;
 
-        ctx.beginPath();
-        ctx.moveTo(x, y);
+                ctx.beginPath();
+                ctx.moveTo(x, y);
 
-        for (let i = 0; i < SEGMENTS; i++) {
-            x += (Math.random() - 0.5) * 14;
-            y += (Math.random() - 0.5) * 14;
-            ctx.lineTo(x, y);
+                for (let i = 0; i < SEGMENTS; i++) {
+                    x += (Math.random() - 0.5) * 14;
+                    y += (Math.random() - 0.5) * 14;
+                    ctx.lineTo(x, y);
+                }
+
+                const color = colors[Math.random() * colors.length | 0];
+                ctx.strokeStyle = color;
+                ctx.lineWidth = Math.random() * 1.2 + 0.9;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 14;
+                ctx.stroke();
+            }
+
+            ctx.restore();
+
+            requestAnimationFrame(() => {
+                setTimeout(drawLightning, Math.random() * 280 + 160);
+            });
         }
 
-        const color = colors[Math.random() * colors.length | 0];
-        ctx.strokeStyle = color;
-        ctx.lineWidth = Math.random() * 1.2 + 0.9;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 14;
-        ctx.stroke();
-    }
-
-    ctx.restore();
-
-    requestAnimationFrame(() => {
-        setTimeout(drawLightning, Math.random() * 280 + 160);
-    });
-}
 
 
-
-       requestAnimationFrame(drawLightning);
+        requestAnimationFrame(drawLightning);
         /* ===== DOWNLOAD QR ===== */
 
         async function downloadQR() {
@@ -523,9 +576,9 @@ function drawLightning() {
             }, 500);
         })();
         document.addEventListener("visibilitychange", () => {
-    running = !document.hidden;
-    if (running) requestAnimationFrame(drawLightning);
-});
+            running = !document.hidden;
+            if (running) requestAnimationFrame(drawLightning);
+        });
 
     </script>
 
@@ -533,5 +586,3 @@ function drawLightning() {
 </body>
 
 </html>
-
-
