@@ -2,6 +2,9 @@
 <html lang="vi">
 <link rel="preload" as="image" href="avatar.webp">
 <link rel="preload" as="image" href="01.gif">
+const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+const MAX_BOLTS = isMobile ? 1 : 3;
+const SEGMENTS = isMobile ? 6 : 8;
 
 <head>
     <meta charset="UTF-8">
@@ -398,46 +401,52 @@
             "rgba(210,190,255,.95)"
         ];
 
-        function drawLightning() {
-            ctx.clearRect(0, 0, size, size);
+        let running = true;
 
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
-            ctx.clip();
+function drawLightning() {
+    if (!running) return;
 
-            // ⚡ ÍT TIA (1–2) nhưng đậm
-            const bolts = Math.random() < 0.7 ? 1 : 2;
+    ctx.clearRect(0, 0, size, size);
 
-            for (let b = 0; b < bolts; b++) {
-                let x = Math.random() * size;
-                let y = Math.random() * size;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+    ctx.clip();
 
-                ctx.beginPath();
-                ctx.moveTo(x, y);
+    const bolts = Math.floor(Math.random() * MAX_BOLTS) + 1;
 
-                const segments = 7; // tia dài hơn
-                for (let i = 0; i < segments; i++) {
-                    x += (Math.random() - 0.5) * 18;
-                    y += (Math.random() - 0.5) * 18;
-                    ctx.lineTo(x, y);
-                }
+    for (let b = 0; b < bolts; b++) {
+        let x = Math.random() * size;
+        let y = Math.random() * size;
 
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                ctx.strokeStyle = color;
-                ctx.lineWidth = Math.random() * 1.2 + 0.9; // 🔥 dày hơn
-                ctx.shadowColor = color;
-                ctx.shadowBlur = 14; // 🔥 sáng mạnh
-                ctx.stroke();
-            }
+        ctx.beginPath();
+        ctx.moveTo(x, y);
 
-            ctx.restore();
-
-            // ⏱️ giật rõ, không spam
-            setTimeout(drawLightning, Math.random() * 450 + 250);
+        for (let i = 0; i < SEGMENTS; i++) {
+            x += (Math.random() - 0.5) * 14;
+            y += (Math.random() - 0.5) * 14;
+            ctx.lineTo(x, y);
         }
 
-        drawLightning();
+        const color = colors[Math.random() * colors.length | 0];
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.random() * 1.2 + 0.9;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 14;
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    requestAnimationFrame(() => {
+        setTimeout(drawLightning, Math.random() * 280 + 160);
+    });
+}
+
+
+
+       requestAnimationFrame(drawLightning);
+        /* ===== DOWNLOAD QR ===== */
 
         async function downloadQR() {
             const response = await fetch(qrImg.src);
@@ -517,6 +526,11 @@
                 }
             }, 500);
         })();
+        document.addEventListener("visibilitychange", () => {
+    running = !document.hidden;
+    if (running) requestAnimationFrame(drawLightning);
+});
+
     </script>
 
 
