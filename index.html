@@ -46,17 +46,16 @@
 
         .payment-avatar {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 80px;
-    height: 80px;
-    z-index: 5;
-    overflow: visible; /* 🔥 */
+    top: -6px;
+    right: -6px;
+    width: 100px;
+    height: 100px;
+    overflow: visible;
         }
 
         .payment-avatar .avatar-img {
     position: absolute;
-    bottom: 8px;
+    bottom: 16px;
     left: 50%;
     transform: translateX(-50%);
     width: 56px;
@@ -72,8 +71,10 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 80px;
+    height: 90px;     /* chỉ khống chế 1 chiều */
+    width: auto;      /* 🔥 giữ đúng tỉ lệ gốc */
+    max-width: none;
+    z-index: 2;
         }
 
 
@@ -361,6 +362,7 @@
 </body>
 
 </html>
+
 
 
 
