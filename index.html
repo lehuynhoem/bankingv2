@@ -6,21 +6,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Chuyển Khoản</title>
+    <title>Lehuy nho em</title>
 
     <style>
         body {
             margin: 0;
             min-height: 100vh;
             font-family: system-ui, sans-serif;
-            background: #020617;
+
+            /* 🎨 THEME ẢNH FULL */
+            background: url("theme.jpg") center / cover no-repeat fixed;
+
             display: flex;
             justify-content: center;
             align-items: center;
             color: #e5e7eb;
+            position: relative;
         }
 
-        /* 🔥 ép GPU xử lý animation */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(120, 120, 255, .15), transparent 60%),
+                linear-gradient(180deg, rgba(2, 6, 23, .65), rgba(2, 6, 23, .85));
+            backdrop-filter: blur(6px);
+            z-index: 0;
+        }
+
+
         .avatar-img,
         .avatar-frame,
         .online-dot,
@@ -30,30 +45,46 @@
             backface-visibility: hidden;
         }
 
-        /* ===== CARD ===== */
         .card {
             position: relative;
             max-width: 380px;
             width: 100%;
-            background: #020617;
-            border: 1px solid #1e293b;
             border-radius: 18px;
             padding: 22px;
+            overflow: hidden;
+
+            /* 🎨 THEME ẢNH */
+            background: url("banner.webp") center / cover no-repeat;
+
+            /* shadow vẫn giữ */
             box-shadow: 0 20px 40px rgba(0, 0, 0, .55);
         }
 
-        /* ===== HEADER ===== */
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(2, 6, 23, .75),
+                    rgba(2, 6, 23, .85));
+            backdrop-filter: blur(6px);
+            z-index: 0;
+        }
+
+        .card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+
         .header {
             position: relative;
             padding-right: 86px;
             margin-bottom: 12px;
-            overflow: visible;
-            /* 🔥 DÒNG QUAN TRỌNG */
         }
 
         .header h1 {
             margin: 0;
-            text-align: left;
             font-size: 20px;
         }
 
@@ -63,10 +94,26 @@
             right: -6px;
             width: 100px;
             height: 100px;
-            overflow: visible;
         }
 
-        .payment-avatar .avatar-img {
+        .payment-avatar canvas {
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            /* 🔥 khóa hình tròn */
+            pointer-events: none;
+            z-index: 3;
+            mix-blend-mode: screen;
+            filter: blur(.3px);
+            overflow: hidden;
+        }
+
+
+        .avatar-img {
             position: absolute;
             bottom: 23.6px;
             left: 50%;
@@ -77,67 +124,19 @@
             z-index: 1;
         }
 
-
-
-        .payment-avatar .avatar-frame {
+        .avatar-frame {
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-67%);
             height: 88px;
-            /* chỉ khống chế 1 chiều */
-            width: auto;
-            /* 🔥 giữ đúng tỉ lệ gốc */
-            max-width: none;
             z-index: 2;
-            image-rendering: auto;
-
         }
 
-        .qr {
-            position: relative;
-        }
-
-        .qr.loading::before {
-            content: "";
-            position: absolute;
-            inset: 14px;
-            border-radius: 10px;
-            background: linear-gradient(90deg,
-                    #e5e7eb 25%,
-                    #f3f4f6 37%,
-                    #e5e7eb 63%);
-            background-size: 400% 100%;
-            animation: shimmer 0.8s infinite linear;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: 100% 0
-            }
-
-            100% {
-                background-position: -100% 0
-            }
-        }
-
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg)
-            }
-
-            to {
-                transform: rotate(360deg)
-            }
-        }
-
-        .payment-avatar .online-dot {
+        .online-dot {
             position: absolute;
             bottom: 17px;
-            /* 👈 NẰM DƯỚI */
-            right: +53px;
-            /* 👈 SÁT MÉP KHUNG */
+            right: 53px;
             width: 13.5px;
             height: 13.5px;
             background: #3ba55d;
@@ -147,17 +146,6 @@
             z-index: 3;
         }
 
-
-
-
-        /* ===== OFFLINE ===== */
-        .payment-avatar.offline .online-dot {
-            background: url("offline.svg") center / cover no-repeat;
-            border: none;
-            box-shadow: none;
-        }
-
-        /* ===== INFO ===== */
         .info {
             font-size: 14px;
             line-height: 1.6;
@@ -165,7 +153,6 @@
 
         .row {
             display: flex;
-            align-items: center;
             gap: 10px;
             margin: 6px 0;
         }
@@ -173,10 +160,8 @@
         .row-text {
             flex: 1;
             font-weight: 600;
-            word-break: break-all;
         }
 
-        /* ===== BUTTON ===== */
         .copy-btn {
             padding: 10px 14px;
             background: #020617;
@@ -184,9 +169,7 @@
             border-radius: 14px;
             border: 1px solid #1e293b;
             cursor: pointer;
-            font-size: 14px;
             font-weight: 600;
-            transition: .15s;
         }
 
         .copy-btn:hover {
@@ -196,27 +179,44 @@
 
         .copy-mini {
             padding: 8px 12px;
-            font-size: 13px
+            font-size: 13px;
         }
 
-        .copy-btn:disabled {
-            opacity: .4;
-            cursor: not-allowed
-        }
-
-        /* ===== QR ===== */
         .qr {
+            position: relative;
             background: #fff;
             padding: 14px;
             border-radius: 14px;
             margin: 16px 0 8px;
         }
 
-        .qr img {
-            width: 100%
+        .qr.loading::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%);
+            background-size: 400% 100%;
+            animation: shimmer .8s infinite linear;
+            pointer-events: none;
         }
 
-        /* ===== TIMER ===== */
+        .qr img {
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 100% 0
+            }
+
+            to {
+                background-position: -100% 0
+            }
+        }
+
         .timer {
             margin-top: 14px;
             height: 4px;
@@ -227,217 +227,221 @@
 
         .timer-bar {
             height: 100%;
-            width: 100%;
             background: #fff;
-            transition: 1s linear;
         }
 
         .timer-wrap {
             margin-top: 14px;
             display: flex;
-            justify-content: center;
-            align-items: center;
             gap: 10px;
+            justify-content: center;
         }
 
-        .timer-text {
-            font-size: 18px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 2px;
-        }
-
-        .timer-text span {
-            position: relative;
-            padding: 0 1px;
-        }
-
-        .timer-text span::after {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            border-radius: 4px;
-            border: 1px solid transparent;
-            animation: ledRun 2.5s linear infinite;
-            animation-delay: calc(var(--i)*.15s);
-        }
-
-
-        /* ===== GLOW ANIMATION (NO ROTATE) ===== */
-        @keyframes frameGlow {
-            0% {
-                filter: drop-shadow(0 0 4px rgba(255, 255, 255, .25));
-            }
-
-            50% {
-                filter: drop-shadow(0 0 10px rgba(255, 255, 255, .55));
-            }
-
-            100% {
-                filter: drop-shadow(0 0 4px rgba(255, 255, 255, .25));
-            }
-        }
-
+        .timer-text,
         .timer-time {
             font-size: 18px;
             font-weight: 900;
-            color: #fff;
-            min-width: 60px;
         }
 
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: #020617;
-            border: 1px solid #fff;
+            transform: translateX(-50%) translateY(16px);
+
+            background: #000;
+            /* 🖤 nền đen */
+            color: #fff;
+            /* 🤍 chữ trắng */
+
+            border: 1px solid rgba(255, 255, 255, .25);
             padding: 10px 16px;
             border-radius: 999px;
-            font-size: 13px;
+            font-weight: 600;
+
             opacity: 0;
-            transition: .3s;
+            pointer-events: none;
+
+            transition: opacity .35s ease, transform .35s ease;
         }
 
+        /* hiện */
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+        }
+
+        /* mờ dần */
+        .toast.fade {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-6px);
         }
     </style>
 </head>
 
 <body>
-
     <div class="card">
-
-        <!-- HEADER -->
         <div class="header">
             <h1>🔰 QR Chuyển Khoản</h1>
-
             <div class="payment-avatar">
+                <canvas id="lightning"></canvas>
                 <img src="avatar.webp" class="avatar-img">
                 <img src="01.gif" class="avatar-frame">
                 <span class="online-dot"></span>
             </div>
         </div>
 
-        <!-- INFO -->
         <div class="info">
-            <b>🏧 Ngân hàng:</b> 𝙑𝙞𝙚𝙩𝙞𝙣𝙗𝙖𝙣𝙠<br>
-            <b>👤 Chủ Tài Khoản:</b> 𝙇𝙀 𝘿𝙐𝘾 𝙃𝙐𝙔<br>
+            <b>🏧 Ngân hàng:</b> Vietinbank<br>
+            <b>👤 Chủ Tài Khoản:</b> LE DUC HUY<br>
 
             <div class="row">
-                <div class="row-text">💳 Số tài khoản: 𝟭𝟬𝟰𝟴𝟴𝟯𝟱𝟰𝟰𝟵𝟵𝟭</div>
-                <button class="copy-btn copy-mini action-btn" onclick="copyText(ACCOUNT)">Sao chép</button>
+                <div class="row-text">💳 104883544991</div>
+                <button class="copy-btn copy-mini" onclick="copyText(ACCOUNT)">Sao chép</button>
             </div>
 
             <div class="row">
                 <div class="row-text"><b>Nội dung:</b> <span id="contentText"></span></div>
-                <button class="copy-btn copy-mini action-btn" onclick="copyText(content)">Sao chép</button>
+                <button class="copy-btn copy-mini" onclick="copyText(content)">Sao chép</button>
             </div>
-
-            <b>⚠️ Lưu ý:</b> Chỉ thanh toán qua tài khoản này
         </div>
 
-        <div class="qr">
+        <div class="qr loading">
             <img id="qrImg">
         </div>
 
-        <button class="copy-btn action-btn" onclick="downloadQR()">⬇️ Tải QR</button>
+        <button class="copy-btn" onclick="downloadQR()">⬇️ Tải QR</button>
 
         <div class="timer">
             <div class="timer-bar" id="timerBar"></div>
         </div>
-
         <div class="timer-wrap">
             <div class="timer-text" id="timerLabel">Mã hết hạn sau:</div>
             <div class="timer-time" id="timerTime"></div>
         </div>
-
-    </div>
     </div>
 
     <div class="toast" id="toast">Đã sao chép ✔</div>
 
     <script>
-        const BANK_ID = "970415";
-        const ACCOUNT = "104883544991";
-        const NAME = "LE DUC HUY";
+        /* ===== DATA ===== */
+        const BANK_ID = "970415", ACCOUNT = "104883544991", NAME = "LE DUC HUY";
         const EXPIRE_TIME = 5 * 60 * 1000;
 
-        const qrImg = document.getElementById("qrImg");
-        const qrBox = document.querySelector(".qr");
-        const contentText = document.getElementById("contentText");
-
-        function randomCode() {
-            return "LEHUY-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-        }
-
-        const content = randomCode();
+        /* ===== QR ===== */
+        const content = "LEHUY-" + Math.random().toString(36).slice(2, 10).toUpperCase();
         contentText.innerText = content;
+        const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT}-compact.png?addInfo=${content}&accountName=${NAME}`;
+        qrImg.onload = () => document.querySelector(".qr").classList.remove("loading");
+        qrImg.src = qrUrl;
 
-        qrBox.classList.add("loading");
+        /* ===== COPY ===== */
+        function copyText(t) {
+            navigator.clipboard.writeText(t);
 
-        const qrUrl =
-            `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT}-compact.png` +
-            `?addInfo=${content}&accountName=${NAME}`;
+            toast.classList.remove("fade");
+            toast.classList.add("show");
 
-        const qrPreload = new Image();
-        qrPreload.decoding = "async";
-        qrPreload.loading = "eager";
-        qrPreload.src = qrUrl;
+            // giữ hiện 800ms
+            setTimeout(() => {
+                toast.classList.add("fade");
+            }, 800);
 
-        qrPreload.onload = () => {
-            qrImg.src = qrUrl;
-            qrBox.classList.remove("loading");
-        };
-
-        qrPreload.onerror = () => {
-            qrBox.classList.remove("loading");
-            console.error("QR load failed");
-        };
-
-        function downloadQR() {
-            fetch(qrImg.src).then(r => r.blob()).then(b => {
-                const u = URL.createObjectURL(b);
-                const a = document.createElement("a");
-                a.href = u;
-                a.download = `QR_${content}.png`;
-                a.click();
-                URL.revokeObjectURL(u);
-            });
+            // ẩn hẳn sau khi fade xong
+            setTimeout(() => {
+                toast.classList.remove("show", "fade");
+            }, 1200);
         }
 
-        const timerLabel = document.getElementById("timerLabel");
-        const timerTime = document.getElementById("timerTime");
-        const timerBar = document.getElementById("timerBar");
-
+        /* ===== TIMER ===== */
         const start = Date.now();
-
-        function updateTimer() {
+        (function tick() {
             const r = EXPIRE_TIME - (Date.now() - start);
-
             if (r <= 0) {
                 timerLabel.innerText = "Mã đã hết hạn";
                 timerTime.innerText = "";
                 timerBar.style.width = "0%";
                 return;
             }
+            timerBar.style.width = r / EXPIRE_TIME * 100 + "%";
+            timerTime.innerText = `${Math.floor(r / 60000)}:${String(Math.floor(r % 60000 / 1000)).padStart(2, "0")}`;
+            requestAnimationFrame(tick);
+        })();
 
-            // Update bar
-            timerBar.style.width = (r / EXPIRE_TIME * 100) + "%";
 
-            // Update time
-            const m = Math.floor(r / 60000);
-            const s = Math.floor((r % 60000) / 1000);
-            timerTime.innerText = `${m}:${s.toString().padStart(2, "0")}`;
 
-            requestAnimationFrame(updateTimer);
+        /* ===== STRONG LIGHTNING IN AVATAR CIRCLE ===== */
+        const c = document.getElementById("lightning");
+        const ctx = c.getContext("2d");
+
+        const size = 88;
+        const dpr = window.devicePixelRatio || 1;
+        c.width = size * dpr;
+        c.height = size * dpr;
+        ctx.scale(dpr, dpr);
+
+        // 🌩️ màu sáng hơn
+        const colors = [
+            "rgba(255,255,255,1)",
+            "rgba(230,230,230,.95)",
+            "rgba(210,190,255,.95)"
+        ];
+
+        function drawLightning() {
+            ctx.clearRect(0, 0, size, size);
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+            ctx.clip();
+
+            // ⚡ ÍT TIA (1–2) nhưng đậm
+            const bolts = Math.random() < 0.7 ? 1 : 2;
+
+            for (let b = 0; b < bolts; b++) {
+                let x = Math.random() * size;
+                let y = Math.random() * size;
+
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+
+                const segments = 7; // tia dài hơn
+                for (let i = 0; i < segments; i++) {
+                    x += (Math.random() - 0.5) * 18;
+                    y += (Math.random() - 0.5) * 18;
+                    ctx.lineTo(x, y);
+                }
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                ctx.strokeStyle = color;
+                ctx.lineWidth = Math.random() * 1.2 + 0.9; // 🔥 dày hơn
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 14; // 🔥 sáng mạnh
+                ctx.stroke();
+            }
+
+            ctx.restore();
+
+            // ⏱️ giật rõ, không spam
+            setTimeout(drawLightning, Math.random() * 450 + 250);
         }
 
-        requestAnimationFrame(updateTimer);
+        drawLightning();
 
+        async function downloadQR() {
+            const response = await fetch(qrImg.src);
+            const blob = await response.blob();
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "chuyenkhoan-lehuy.png"; // tên file
+            document.body.appendChild(a);
+            a.click();
+
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     </script>
 
 
