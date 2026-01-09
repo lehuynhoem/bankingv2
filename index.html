@@ -9,7 +9,18 @@
     <title>Lehuy nho em</title>
 
     <style>
+        html,
         body {
+            height: 100%;
+            overflow: hidden;
+            /* ❌ không lướt lên xuống */
+            overscroll-behavior: none;
+        }
+
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
             margin: 0;
             min-height: 100vh;
             font-family: system-ui, sans-serif;
@@ -442,6 +453,38 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+        /* ===== ANTI F12 / DEVTOOLS ===== */
+        document.addEventListener("keydown", e => {
+            // F12
+            if (e.key === "F12") {
+                e.preventDefault();
+                return false;
+            }
+
+            // Ctrl + Shift + I / J / C
+            if (
+                e.ctrlKey &&
+                e.shiftKey &&
+                ["I", "J", "C"].includes(e.key.toUpperCase())
+            ) {
+                e.preventDefault();
+                return false;
+            }
+
+            // Ctrl + U (view source)
+            if (e.ctrlKey && e.key.toUpperCase() === "U") {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        document.addEventListener("contextmenu", e => {
+            if (!e.target.closest(".allow-action")) {
+                e.preventDefault();
+            }
+        });
+
+
     </script>
 
 
