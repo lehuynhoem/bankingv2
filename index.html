@@ -32,9 +32,10 @@
 
         /* ===== HEADER ===== */
         .header {
-            position: relative;
-            padding-right: 86px;
-            margin-bottom: 12px;
+    position: relative;
+    padding-right: 86px;
+    margin-bottom: 12px;
+    overflow: visible; /* 🔥 DÒNG QUAN TRỌNG */
         }
 
         .header h1 {
@@ -47,10 +48,10 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 80px;          /* tăng vùng chứa */
+    width: 80px;
     height: 80px;
     z-index: 5;
-    overflow: visible;   /* 🔥 QUAN TRỌNG */
+    overflow: visible; /* 🔥 */
         }
 
         .payment-avatar .avatar-img {
@@ -73,7 +74,6 @@
     transform: translateX(-50%);
     width: 80px;
     height: 80px;
-    z-index: 2;
         }
 
 
@@ -361,6 +361,7 @@
 </body>
 
 </html>
+
 
 
 
