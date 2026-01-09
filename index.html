@@ -44,44 +44,36 @@
         }
 
         .payment-avatar {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 64px;
-            height: 64px;
-            z-index: 5;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;          /* tăng vùng chứa */
+    height: 80px;
+    z-index: 5;
+    overflow: visible;   /* 🔥 QUAN TRỌNG */
         }
 
         .payment-avatar .avatar-img {
-            position: absolute;
-            bottom: +7px;
-            /* 👈 avatar thò xuống dưới */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            object-fit: cover;
-            z-index: 1;
-            /* 👈 nằm dưới khung */
-            background: #020617;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    z-index: 1;
         }
 
 
 
         .payment-avatar .avatar-frame {
-            position: absolute;
-            inset: 0;
-            width: 64px;
-            height: 64px;
-            z-index: 2;
-            /* 👈 đè lên avatar */
-            pointer-events: none;
-            user-select: none;
-
-            /* glow nhẹ */
-            filter: drop-shadow(0 0 6px rgba(255, 255, 255, .35));
-            animation: frameGlow 2.5s ease-in-out infinite;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    z-index: 2;
         }
 
 
@@ -369,6 +361,7 @@
 </body>
 
 </html>
+
 
 
 
