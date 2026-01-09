@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
+<link rel="preload" as="image" href="avatar.webp">
+<link rel="preload" as="image" href="01.gif">
 
 <head>
     <meta charset="UTF-8">
@@ -16,6 +18,16 @@
             justify-content: center;
             align-items: center;
             color: #e5e7eb;
+        }
+
+        /* 🔥 ép GPU xử lý animation */
+        .avatar-img,
+        .avatar-frame,
+        .online-dot,
+        .timer-bar {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         /* ===== CARD ===== */
@@ -78,8 +90,36 @@
             /* 🔥 giữ đúng tỉ lệ gốc */
             max-width: none;
             z-index: 2;
+            image-rendering: auto;
+
         }
 
+        .qr {
+            position: relative;
+        }
+
+        .qr.loading::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 10px;
+            background: linear-gradient(90deg,
+                    #e5e7eb 25%,
+                    #f3f4f6 37%,
+                    #e5e7eb 63%);
+            background-size: 400% 100%;
+            animation: shimmer 0.8s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 100% 0
+            }
+
+            100% {
+                background-position: -100% 0
+            }
+        }
 
 
         @keyframes spin {
@@ -311,9 +351,11 @@
         </div>
 
         <div class="timer-wrap">
-            <div class="timer-text" id="timerLabel"></div>
+            <div class="timer-text" id="timerLabel">Mã hết hạn sau:</div>
             <div class="timer-time" id="timerTime"></div>
         </div>
+
+    </div>
     </div>
 
     <div class="toast" id="toast">Đã sao chép ✔</div>
@@ -322,7 +364,11 @@
         const BANK_ID = "970415";
         const ACCOUNT = "104883544991";
         const NAME = "LE DUC HUY";
-        const EXPIRE_TIME = 15 * 60 * 1000;
+        const EXPIRE_TIME = 5 * 60 * 1000;
+
+        const qrImg = document.getElementById("qrImg");
+        const qrBox = document.querySelector(".qr");
+        const contentText = document.getElementById("contentText");
 
         function randomCode() {
             return "LEHUY-" + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -330,37 +376,70 @@
 
         const content = randomCode();
         contentText.innerText = content;
-        qrImg.src = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT}-compact.png?addInfo=${content}&accountName=${NAME}`;
 
-        const label = "MÃ HẾT HẠN SAU:";
-        timerLabel.innerHTML = [...label].map((c, i) => `<span style="--i:${i}">${c === " " ? "&nbsp;" : c}</span>`).join("");
+        qrBox.classList.add("loading");
 
-        const toast = document.getElementById("toast");
-        function copyText(t) {
-            navigator.clipboard.writeText(t);
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 1200);
-        }
+        const qrUrl =
+            `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT}-compact.png` +
+            `?addInfo=${content}&accountName=${NAME}`;
+
+        const qrPreload = new Image();
+        qrPreload.decoding = "async";
+        qrPreload.loading = "eager";
+        qrPreload.src = qrUrl;
+
+        qrPreload.onload = () => {
+            qrImg.src = qrUrl;
+            qrBox.classList.remove("loading");
+        };
+
+        qrPreload.onerror = () => {
+            qrBox.classList.remove("loading");
+            console.error("QR load failed");
+        };
 
         function downloadQR() {
             fetch(qrImg.src).then(r => r.blob()).then(b => {
                 const u = URL.createObjectURL(b);
                 const a = document.createElement("a");
-                a.href = u; a.download = `QR_${content}.png`; a.click();
+                a.href = u;
+                a.download = `QR_${content}.png`;
+                a.click();
                 URL.revokeObjectURL(u);
             });
         }
 
+        const timerLabel = document.getElementById("timerLabel");
+        const timerTime = document.getElementById("timerTime");
+        const timerBar = document.getElementById("timerBar");
+
         const start = Date.now();
-        setInterval(() => {
+
+        function updateTimer() {
             const r = EXPIRE_TIME - (Date.now() - start);
-            if (r <= 0) { timerTime.innerText = "HẾT HẠN"; timerBar.style.width = "0%"; return }
+
+            if (r <= 0) {
+                timerLabel.innerText = "Mã đã hết hạn";
+                timerTime.innerText = "";
+                timerBar.style.width = "0%";
+                return;
+            }
+
+            // Update bar
             timerBar.style.width = (r / EXPIRE_TIME * 100) + "%";
+
+            // Update time
             const m = Math.floor(r / 60000);
-            const s = Math.floor(r % 60000 / 1000);
+            const s = Math.floor((r % 60000) / 1000);
             timerTime.innerText = `${m}:${s.toString().padStart(2, "0")}`;
-        }, 1000);
+
+            requestAnimationFrame(updateTimer);
+        }
+
+        requestAnimationFrame(updateTimer);
+
     </script>
+
 
 </body>
 
