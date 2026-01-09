@@ -5,9 +5,8 @@
 
 <head>
     <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>  lehuy nho em </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title> lehuy nho em </title>
 
     <script>
         /* ===== LIGHTNING SETTINGS ===== */
@@ -300,21 +299,21 @@
 <body>
     <div class="card">
         <div class="header">
-            <h1> QR Chuyển Khoản</h1>
+            <h1>🔰 QR Chuyển Khoản</h1>
             <div class="payment-avatar">
                 <canvas id="lightning"></canvas>
-                <img src="avatar.webp" class="avatar-img">
+                <img src="avt.png" class="avatar-img">
                 <img src="01.gif" class="avatar-frame">
                 <span class="online-dot"></span>
             </div>
         </div>
 
         <div class="info">
-            <b>🏧 Ngân hàng :</b> 𝙑𝙞𝙚𝙩𝙞𝙣𝙗𝙖𝙣𝙠<br>
-            <b>👤 Chủ Tài Khoản :</b> 𝙇𝙀 𝘿𝙐𝘾 𝙃𝙐𝙔<br>
+            <b>🏧 Ngân hàng:</b> Vietinbank<br>
+            <b>👤 Chủ Tài Khoản:</b> LE DUC HUY<br>
 
             <div class="row">
-                <div class="row-text">💳 STK : 𝟭𝟬𝟰𝟴𝟴𝟯𝟱𝟰𝟰𝟵𝟵𝟭</div>
+                <div class="row-text">💳 104883544991</div>
                 <button class="copy-btn copy-mini" onclick="copyText(ACCOUNT)">Sao chép</button>
             </div>
 
@@ -536,23 +535,23 @@
         });
 
     </script>
-<script>
-(function blockDesktopModeOnMobile() {
-    const ua = navigator.userAgent;
-    const isMobileUA = /Android|iPhone|iPad|iPod/i.test(ua);
-    const isTouch = navigator.maxTouchPoints > 1;
+    <script>
+        (function blockDesktopModeOnMobile() {
+            const ua = navigator.userAgent;
+            const isMobileUA = /Android|iPhone|iPad|iPod/i.test(ua);
+            const isTouch = navigator.maxTouchPoints > 1;
 
-    const isDesktopLayout =
-        window.innerWidth >= 900 ||
-        window.innerWidth / window.innerHeight > 1.25;
+            const isDesktopLayout =
+                window.innerWidth >= 900 ||
+                window.innerWidth / window.innerHeight > 1.25;
 
-    if (isMobileUA && isTouch && isDesktopLayout) {
-        document.body.style.margin = "0";
-        document.body.style.display = "flex";
-        document.body.style.alignItems = "center";
-        document.body.style.justifyContent = "center";
+            if (isMobileUA && isTouch && isDesktopLayout) {
+                document.body.style.margin = "0";
+                document.body.style.display = "flex";
+                document.body.style.alignItems = "center";
+                document.body.style.justifyContent = "center";
 
-        document.body.innerHTML = `
+                document.body.innerHTML = `
             <div style="
                 text-align:center;
                 padding:24px;
@@ -571,48 +570,47 @@
                 </p>
             </div>
         `;
-    }
-})();
-</script>
-<script>
-/* ===== ANTI ZOOM MOBILE ===== */
-(function antiZoomMobile() {
-    let lastTouchEnd = 0;
+            }
+        })();
+    </script>
+    <script>
+        /* ===== ANTI ZOOM MOBILE ===== */
+        (function antiZoomMobile() {
+            let lastTouchEnd = 0;
 
-    // ❌ Double tap zoom
-    document.addEventListener("touchend", e => {
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) {
-            e.preventDefault();
-        }
-        lastTouchEnd = now;
-    }, { passive: false });
+            // ❌ Double tap zoom
+            document.addEventListener("touchend", e => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, { passive: false });
 
-    // ❌ Pinch zoom
-    document.addEventListener("touchmove", e => {
-        if (e.touches.length > 1) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-})();
-// ❌ Ctrl + mouse wheel
-document.addEventListener("wheel", e => {
-    if (e.ctrlKey) {
-        e.preventDefault();
-    }
-}, { passive: false });
-document.addEventListener("keydown", e => {
-    if (
-        e.ctrlKey &&
-        ["+", "-", "=", "0"].includes(e.key)
-    ) {
-        e.preventDefault();
-    }
-});
-</script>
+            // ❌ Pinch zoom
+            document.addEventListener("touchmove", e => {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        })();
+        // ❌ Ctrl + mouse wheel
+        document.addEventListener("wheel", e => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        document.addEventListener("keydown", e => {
+            if (
+                e.ctrlKey &&
+                ["+", "-", "=", "0"].includes(e.key)
+            ) {
+                e.preventDefault();
+            }
+        });
+    </script>
 
 
 </body>
 
 </html>
-
