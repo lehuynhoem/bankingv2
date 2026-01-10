@@ -712,6 +712,7 @@
             }
         });
 <script>
+<script>
 (async function maintenanceCheck() {
   try {
     const res = await fetch(
@@ -723,7 +724,7 @@
 
     const cfg = await res.json();
 
-    if (cfg.maintenance) {
+    if (cfg.maintenance === true) {
       document.body.innerHTML = `
         <div style="
           height:100vh;
@@ -745,17 +746,20 @@
           </div>
         </div>
       `;
+      throw new Error("MAINTENANCE");
     }
   } catch (e) {
-    console.warn("Maintenance check failed");
+    console.log("Maintenance mode or fetch blocked");
   }
 })();
 </script>
+
 
     </script>
 
 </body>
 
 </html>
+
 
 
