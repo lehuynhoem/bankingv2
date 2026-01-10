@@ -2,27 +2,7 @@
 <html lang="vi">
 <link rel="preload" as="image" href="avatar.webp">
 <link rel="preload" as="image" href="01.gif">
-<script>
-    const MAINTENANCE_MODE = true; // 🔥 true = bật | false = tắt
-</script>
 
-<head>
-    <script>
-        if (MAINTENANCE_MODE) {
-            document.write(`
-        <style>
-        body { display: none; }
-        </style>
-        <div id="maintenance">
-            <div class="maintenance-box">
-                <h1>⚠️ Hệ Thống Bảo Trì ⚠️</h1>
-                <p>Hiện tại hệ thống đang trong quá trình bảo trì để nâng cấp và cải thiện dịch vụ. Vui lòng quay lại sau ít phút nữa. Xin lỗi vì sự bất tiện này và cảm ơn bạn đã thông cảm!</p>
-            </div>
-        </div>
-        `);
-            throw new Error("Maintenance Mode Enabled");
-        }
-    </script>
 
     <head>
         <meta charset="UTF-8">
@@ -731,10 +711,51 @@
                 e.preventDefault();
             }
         });
+<script>
+(async function maintenanceCheck() {
+  try {
+    const res = await fetch(
+      "https://raw.githubusercontent.com/lehuynhoem/l/main/maintenance.json?ts=" + Date.now(),
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return;
+
+    const cfg = await res.json();
+
+    if (cfg.maintenance) {
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:#000;
+          color:#fff;
+          font-family:system-ui,sans-serif;
+          text-align:center;
+          padding:24px;">
+          <div>
+            <div style="font-size:26px;font-weight:900;margin-bottom:12px;">
+              🚧 ĐANG BẢO TRÌ
+            </div>
+            <div style="font-size:15px;opacity:.85;">
+              ${cfg.message || "Vui lòng quay lại sau"}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  } catch (e) {
+    console.warn("Maintenance check failed");
+  }
+})();
+</script>
 
     </script>
 
 </body>
 
 </html>
+
 
