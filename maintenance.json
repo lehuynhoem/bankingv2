@@ -1,4 +1,4 @@
 {
-  "maintenance": true, // 🔥 true = bật | false = tắt
+  "maintenance": true,   // 🔥 true = bật | false = tắt
   "message": "⚠️ Web đang bảo trì, vui lòng quay lại sau khi Lehuy thông báo"
 }
