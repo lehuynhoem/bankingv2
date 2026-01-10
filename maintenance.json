@@ -1,5 +1,5 @@
 {
   "_note": "maintenance: true = bật | false = tắt",
-  "maintenance": true,
+  "maintenance": false,
   "message": "⚠️ Web đang bảo trì, vui lòng quay lại sau khi Lehuy thông báo"
 }
