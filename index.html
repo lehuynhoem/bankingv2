@@ -2,396 +2,379 @@
 <html lang="vi">
 <link rel="preload" as="image" href="avatar.webp">
 <link rel="preload" as="image" href="01.gif">
-<script>
-    const MAINTENANCE_MODE = true; // 🔥 true = bật | false = tắt
-</script>
 
 <head>
+    #
+    <script src="maintenance.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title> lehuy nho em </title>
+
+
     <script>
-        if (MAINTENANCE_MODE) {
-            document.write(`
-        <style>
-        body { display: none; }
-        </style>
-        <div id="maintenance">
-            <div class="maintenance-box">
-                <h1>⚠️ Hệ Thống Bảo Trì ⚠️</h1>
-                <p>Hiện tại hệ thống đang trong quá trình bảo trì để nâng cấp và cải thiện dịch vụ. Vui lòng quay lại sau ít phút nữa. Xin lỗi vì sự bất tiện này và cảm ơn bạn đã thông cảm!</p>
-            </div>
-        </div>
-        `);
-            throw new Error("Maintenance Mode Enabled");
-        }
+        /* ===== LIGHTNING SETTINGS ===== */
+        const MAX_BOLTS = 10; // số tia sét cùng lúc
+        const SEGMENTS = 12; // số đoạn mỗi tia
     </script>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <title> lehuy nho em </title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            /* ❌ không lướt lên xuống */
+            overscroll-behavior: none;
+        }
 
-        <script>
-            /* ===== LIGHTNING SETTINGS ===== */
-            const MAX_BOLTS = 10; // số tia sét cùng lúc
-            const SEGMENTS = 12; // số đoạn mỗi tia
-        </script>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            margin: 0;
+            min-height: 100vh;
+            font-family: system-ui, sans-serif;
 
-        <style>
-            html,
-            body {
-                height: 100%;
-                overflow: hidden;
-                /* ❌ không lướt lên xuống */
-                overscroll-behavior: none;
+            /* 🎨 THEME ẢNH FULL */
+            background: url("theme.jpg") center / cover no-repeat fixed;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e5e7eb;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(120, 120, 255, .15), transparent 60%),
+                linear-gradient(180deg, rgba(2, 6, 23, .65), rgba(2, 6, 23, .85));
+            backdrop-filter: blur(6px);
+            z-index: 0;
+        }
+
+
+        .avatar-img,
+        .avatar-frame,
+        .online-dot,
+        .timer-bar {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        .card {
+            position: relative;
+            max-width: 380px;
+            width: 100%;
+            border-radius: 18px;
+            padding: 22px;
+            overflow: hidden;
+
+            /* 🎨 THEME ẢNH */
+            background: url("banner.webp") center / cover no-repeat;
+
+            /* shadow vẫn giữ */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .55);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(2, 6, 23, .75),
+                    rgba(2, 6, 23, .85));
+            backdrop-filter: blur(6px);
+            z-index: 0;
+        }
+
+        .card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+
+        .header {
+            position: relative;
+            padding-right: 86px;
+            margin-bottom: 12px;
+        }
+
+        .menu-dot {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+            color: #fff;
+            user-select: none;
+        }
+
+        .menu-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff3b3b;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease, transform .3s ease;
+        }
+
+        .menu-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .menu-toast.fade {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .payment-avatar {
+            position: absolute;
+            top: -7px;
+            right: -6px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .payment-avatar canvas {
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            /* 🔥 khóa hình tròn */
+            pointer-events: none;
+            z-index: 3;
+            mix-blend-mode: screen;
+            filter: blur(.3px);
+            overflow: hidden;
+        }
+
+
+        .avatar-img {
+            position: absolute;
+            bottom: 23.6px;
+            left: 50%;
+            transform: translateX(-106.62%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .avatar-frame {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-67%);
+            height: 88px;
+            z-index: 2;
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 17px;
+            right: 53px;
+            width: 13.5px;
+            height: 13.5px;
+            background: #3ba55d;
+            border-radius: 50%;
+            border: 2.7px solid #020617;
+            box-shadow: 0 0 6px rgba(59, 165, 93, .9);
+            z-index: 3;
+        }
+
+        .info {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin: 6px 0;
+        }
+
+        .row-text {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            padding: 10px 14px;
+            background: #020617;
+            color: #e5e7eb;
+            border-radius: 14px;
+            border: 1px solid #1e293b;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 18px rgba(255, 255, 255, .35);
+        }
+
+        .copy-mini {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .qr {
+            position: relative;
+            background: #fff;
+            padding: 14px;
+            border-radius: 14px;
+            margin: 16px 0 8px;
+        }
+
+        .qr.loading::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%);
+            background-size: 400% 100%;
+            animation: shimmer .8s infinite linear;
+            pointer-events: none;
+        }
+
+        .qr img {
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 100% 0
             }
 
-            body {
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-                margin: 0;
-                min-height: 100vh;
-                font-family: system-ui, sans-serif;
-
-                /* 🎨 THEME ẢNH FULL */
-                background: url("theme.jpg") center / cover no-repeat fixed;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #e5e7eb;
-                position: relative;
+            to {
+                background-position: -100% 0
             }
+        }
 
-            body::before {
-                content: "";
-                position: fixed;
-                inset: 0;
-                background:
-                    radial-gradient(circle at top, rgba(120, 120, 255, .15), transparent 60%),
-                    linear-gradient(180deg, rgba(2, 6, 23, .65), rgba(2, 6, 23, .85));
-                backdrop-filter: blur(6px);
-                z-index: 0;
-            }
+        .timer {
+            margin-top: 14px;
+            height: 4px;
+            background: #1e293b;
+            border-radius: 999px;
+            overflow: hidden;
+        }
 
+        .timer-bar {
+            height: 100%;
+            background: #fff;
+        }
 
-            .avatar-img,
-            .avatar-frame,
-            .online-dot,
-            .timer-bar {
-                will-change: transform, opacity;
-                transform: translateZ(0);
-                backface-visibility: hidden;
-            }
+        .timer-wrap {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
 
-            .card {
-                position: relative;
-                max-width: 380px;
-                width: 100%;
-                border-radius: 18px;
-                padding: 22px;
-                overflow: hidden;
+        .timer-text,
+        .timer-time {
+            font-size: 18px;
+            font-weight: 900;
+        }
 
-                /* 🎨 THEME ẢNH */
-                background: url("banner.webp") center / cover no-repeat;
+        #maintenance {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background:
+                radial-gradient(circle at top, rgba(120, 120, 255, .15), transparent 60%),
+                linear-gradient(180deg, #020617, #000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
 
-                /* shadow vẫn giữ */
-                box-shadow: 0 20px 40px rgba(0, 0, 0, .55);
-            }
+        .maintenance-box {
+            text-align: center;
+            padding: 32px 28px;
+            max-width: 320px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, .6);
+            box-shadow: 0 0 40px rgba(0, 0, 0, .8);
+            color: #fff;
+            font-family: system-ui, sans-serif;
+        }
 
-            .card::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(180deg,
-                        rgba(2, 6, 23, .75),
-                        rgba(2, 6, 23, .85));
-                backdrop-filter: blur(6px);
-                z-index: 0;
-            }
+        .maintenance-box h1 {
+            margin: 0 0 12px;
+            font-size: 22px;
+            font-weight: 900;
+        }
 
-            .card>* {
-                position: relative;
-                z-index: 1;
-            }
+        .maintenance-box p {
+            margin: 0;
+            font-size: 14px;
+            opacity: .85;
+            line-height: 1.5;
+        }
 
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
 
-            .header {
-                position: relative;
-                padding-right: 86px;
-                margin-bottom: 12px;
-            }
+            background: #000;
+            /* 🖤 nền đen */
+            color: #fff;
+            /* 🤍 chữ trắng */
 
-            .menu-dot {
-                position: absolute;
-                top: 16px;
-                right: 16px;
-                font-size: 22px;
-                cursor: pointer;
-                z-index: 10;
-                color: #fff;
-                user-select: none;
-            }
+            border: 1px solid rgba(255, 255, 255, .25);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 600;
 
-            .menu-toast {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #ff3b3b;
-                color: #fff;
-                padding: 12px 18px;
-                border-radius: 12px;
-                font-weight: 600;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity .3s ease, transform .3s ease;
-            }
+            opacity: 0;
+            pointer-events: none;
 
-            .menu-toast.show {
-                opacity: 1;
-                transform: translateY(0);
-                pointer-events: auto;
-            }
+            transition: opacity .35s ease, transform .35s ease;
+        }
 
-            .menu-toast.fade {
-                opacity: 0;
-                transform: translateY(-6px);
-            }
+        /* hiện */
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
 
-            .header h1 {
-                margin: 0;
-                font-size: 20px;
-            }
-
-            .payment-avatar {
-                position: absolute;
-                top: -7px;
-                right: -6px;
-                width: 100px;
-                height: 100px;
-            }
-
-            .payment-avatar canvas {
-                position: absolute;
-                top: 6px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 88px;
-                height: 88px;
-                border-radius: 50%;
-                /* 🔥 khóa hình tròn */
-                pointer-events: none;
-                z-index: 3;
-                mix-blend-mode: screen;
-                filter: blur(.3px);
-                overflow: hidden;
-            }
-
-
-            .avatar-img {
-                position: absolute;
-                bottom: 23.6px;
-                left: 50%;
-                transform: translateX(-106.62%);
-                width: 56px;
-                height: 56px;
-                border-radius: 50%;
-                z-index: 1;
-            }
-
-            .avatar-frame {
-                position: absolute;
-                top: 0;
-                left: 50%;
-                transform: translateX(-67%);
-                height: 88px;
-                z-index: 2;
-            }
-
-            .online-dot {
-                position: absolute;
-                bottom: 17px;
-                right: 53px;
-                width: 13.5px;
-                height: 13.5px;
-                background: #3ba55d;
-                border-radius: 50%;
-                border: 2.7px solid #020617;
-                box-shadow: 0 0 6px rgba(59, 165, 93, .9);
-                z-index: 3;
-            }
-
-            .info {
-                font-size: 14px;
-                line-height: 1.6;
-            }
-
-            .row {
-                display: flex;
-                gap: 10px;
-                margin: 6px 0;
-            }
-
-            .row-text {
-                flex: 1;
-                font-weight: 600;
-            }
-
-            .copy-btn {
-                padding: 10px 14px;
-                background: #020617;
-                color: #e5e7eb;
-                border-radius: 14px;
-                border: 1px solid #1e293b;
-                cursor: pointer;
-                font-weight: 600;
-            }
-
-            .copy-btn:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 0 18px rgba(255, 255, 255, .35);
-            }
-
-            .copy-mini {
-                padding: 8px 12px;
-                font-size: 13px;
-            }
-
-            .qr {
-                position: relative;
-                background: #fff;
-                padding: 14px;
-                border-radius: 14px;
-                margin: 16px 0 8px;
-            }
-
-            .qr.loading::before {
-                content: "";
-                position: absolute;
-                inset: 14px;
-                border-radius: 10px;
-                background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%);
-                background-size: 400% 100%;
-                animation: shimmer .8s infinite linear;
-                pointer-events: none;
-            }
-
-            .qr img {
-                width: 100%;
-                position: relative;
-                z-index: 1;
-            }
-
-            @keyframes shimmer {
-                from {
-                    background-position: 100% 0
-                }
-
-                to {
-                    background-position: -100% 0
-                }
-            }
-
-            .timer {
-                margin-top: 14px;
-                height: 4px;
-                background: #1e293b;
-                border-radius: 999px;
-                overflow: hidden;
-            }
-
-            .timer-bar {
-                height: 100%;
-                background: #fff;
-            }
-
-            .timer-wrap {
-                margin-top: 14px;
-                display: flex;
-                gap: 10px;
-                justify-content: center;
-            }
-
-            .timer-text,
-            .timer-time {
-                font-size: 18px;
-                font-weight: 900;
-            }
-
-            #maintenance {
-                position: fixed;
-                inset: 0;
-                z-index: 99999;
-                background:
-                    radial-gradient(circle at top, rgba(120, 120, 255, .15), transparent 60%),
-                    linear-gradient(180deg, #020617, #000);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                backdrop-filter: blur(10px);
-            }
-
-            .maintenance-box {
-                text-align: center;
-                padding: 32px 28px;
-                max-width: 320px;
-                border-radius: 20px;
-                background: rgba(0, 0, 0, .6);
-                box-shadow: 0 0 40px rgba(0, 0, 0, .8);
-                color: #fff;
-                font-family: system-ui, sans-serif;
-            }
-
-            .maintenance-box h1 {
-                margin: 0 0 12px;
-                font-size: 22px;
-                font-weight: 900;
-            }
-
-            .maintenance-box p {
-                margin: 0;
-                font-size: 14px;
-                opacity: .85;
-                line-height: 1.5;
-            }
-
-            /* ===== TOAST ===== */
-            .toast {
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%) translateY(16px);
-
-                background: #000;
-                /* 🖤 nền đen */
-                color: #fff;
-                /* 🤍 chữ trắng */
-
-                border: 1px solid rgba(255, 255, 255, .25);
-                padding: 10px 16px;
-                border-radius: 999px;
-                font-weight: 600;
-
-                opacity: 0;
-                pointer-events: none;
-
-                transition: opacity .35s ease, transform .35s ease;
-            }
-
-            /* hiện */
-            .toast.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-
-            /* mờ dần */
-            .toast.fade {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-6px);
-            }
-        </style>
-    </head>
-    <div class="menu-toast" id="menuToast">⚠️ Có lỗi, vui lòng nhắn tin cho Admin</div>
+        /* mờ dần */
+        .toast.fade {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-6px);
+        }
+    </style>
+</head>
+<div class="menu-toast" id="menuToast">⚠️ Có lỗi, vui lòng nhắn tin cho Admin</div>
 
 <body>
     <div class="card">
